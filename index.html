@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV Viewer</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 40px;
+    text-align: center;
+  }
+  input {
+    margin-bottom: 20px;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 80%;
+  }
+  th, td {
+    border: 1px solid #aaa;
+    padding: 8px;
+  }
+  th {
+    background: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+  <h2>CSV File Viewer</h2>
+  <input type="file" id="csvFile" accept=".csv">
+  <table id="output"></table>
+
+  <script>
+    document.getElementById('csvFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const rows = e.target.result.split('\n').map(r => r.split(','));
+        const table = document.getElementById('output');
+        table.innerHTML = ''; // clear previous
+
+        rows.forEach((row, i) => {
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const c = document.createElement(i === 0 ? 'th' : 'td');
+            c.textContent = cell.trim();
+            tr.appendChild(c);
+          });
+          table.appendChild(tr);
+        });
+      };
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
