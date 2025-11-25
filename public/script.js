@@ -17,7 +17,7 @@ function parseCSV(csv) {
 
   // Model type mapping: handheld vs base station
   const handheldModels = ['PD782', 'HP702', 'HP782']; // Add more handhelds
-  const baseStationModels = ['HM702', 'HM782',]; // Add base stations
+  const baseStationModels = ['HM702', 'HM782']; // Add base stations
 
   // Count models per building per customer
   const buildings = {};
@@ -25,56 +25,72 @@ function parseCSV(csv) {
   dataRows.forEach(row => {
     const [model, serial, radioId, customer, building, customerName] = row.map(v => v.trim());
 
-    if (!buildings[building]) buildings[building] = {};
-    if (!buildings[building][model]) buildings[building][model] = {};
-    if (!buildings[building][model][customerName]) buildings[building][model][customerName] = 0;
-
-    buildings[building][model][customerName]++;
+    if (!buildings[building]) buildings[building] = [];
+    buildings[building].push({ model, customerName });
   });
 
-  // Build ASCII output
   let output = "";
 
   Object.keys(buildings).forEach(buildingName => {
-    const lines = [];
+    const tableRows = [];
 
-    Object.keys(buildings[buildingName]).forEach(model => {
-      const customers = buildings[buildingName][model];
-
-      Object.keys(customers).forEach(customer => {
-        const count = customers[customer];
-
-        // Determine model type
-        let imagePlaceholder = '';
-        if (handheldModels.includes(model)) {
-          imagePlaceholder = '#8**';
-        } else if (baseStationModels.some(m => model.startsWith(m))) {
-          imagePlaceholder = 'MM_/';
-        } else {
-          imagePlaceholder = '???';
-        }
-
-        const line = showImage
-          ? `| ${imagePlaceholder}   ${model}   ${customer} Count: ${count} |`
-          : `| ${model}   ${customer} Count: ${count} |`;
-
-        lines.push(line);
-      });
+    // Prepare rows with type and count per model+customer
+    const countMap = {}; // key = model|customer
+    buildings[buildingName].forEach(item => {
+      const key = `${item.model}|${item.customerName}`;
+      countMap[key] = (countMap[key] || 0) + 1;
     });
 
-    if (lines.length === 0) return;
+    Object.keys(countMap).forEach(key => {
+      const [model, customer] = key.split('|');
+      const count = countMap[key];
 
-    // Calculate max line length
-    const maxLength = Math.max(...lines.map(l => l.length - 2)); // -2 for | |
-    const border = '+' + '-'.repeat(maxLength) + '+';
+      // Determine type image placeholder
+      let type = '';
+      if (handheldModels.includes(model)) type = '#8**';
+      else if (baseStationModels.some(m => model.startsWith(m))) type = 'MM_/';
+      else type = '???';
+
+      const rowObj = {
+        MODEL: model,
+        PLACE: customer,
+        COUNT: count.toString()
+      };
+
+      if (showImage) rowObj.TYPE = type;
+
+      tableRows.push(rowObj);
+    });
+
+    if (tableRows.length === 0) return;
+
+    // Determine columns dynamically
+    const columns = showImage ? ['TYPE', 'MODEL', 'PLACE', 'COUNT'] : ['MODEL', 'PLACE', 'COUNT'];
+
+    // Determine max width for each column
+    const colWidths = {};
+    columns.forEach(col => {
+      colWidths[col] = Math.max(
+        col.length,
+        ...tableRows.map(r => r[col].length)
+      );
+    });
+
+    // Build border
+    const border = '+' + columns.map(col => '-'.repeat(colWidths[col] + 2)).join('+') + '+';
+
+    // Header
+    const header = '| ' + columns.map(col => col.padEnd(colWidths[col])).join(' | ') + ' |';
 
     output += `[ ${buildingName} ]\n`;
     output += border + "\n";
+    output += header + "\n";
+    output += border + "\n";
 
-    lines.forEach(line => {
-      const content = line.slice(2, -2); // remove | |
-      const padded = content.padEnd(maxLength, ' ');
-      output += `|${padded}|\n`;
+    // Output each row
+    tableRows.forEach(r => {
+      const line = '| ' + columns.map(col => r[col].padEnd(colWidths[col])).join(' | ') + ' |';
+      output += line + "\n";
     });
 
     output += border + "\n\n";
