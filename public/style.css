@@ -1,20 +1,33 @@
- body {
-    font-family: sans-serif;
-    margin: 40px;
-    text-align: center;
-  }
-  input {
-    margin-bottom: 20px;
-  }
-  table {
-    border-collapse: collapse;
-    margin: 0 auto;
-    width: 80%;
-  }
-  th, td {
-    border: 1px solid #aaa;
-    padding: 8px;
-  }
-  th {
-    background: #f0f0f0;
-  }
+.buildingGroup {
+  border: 3px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 25px auto;
+  width: 90%;
+  background: #fafafa;
+}
+
+.buildingTitle {
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  text-align: left;
+}
+
+.buildingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
+}
+
+.radioCard {
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  text-align: center;
+}
+
+.radioImage {
+  width: 80px;
+  height: auto;
+  margin-bottom: 8px;
+}

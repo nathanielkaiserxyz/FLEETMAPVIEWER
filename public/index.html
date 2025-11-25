@@ -3,13 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSV Viewer</title>
-<link rel="stylesheet" type="text/css" href="style.css">
+<title>Fleetmap Viewer</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <h2>CSV File Viewer</h2>
+  <h2>FLEETMAP VIEWER</h2>
+  <p>Upload a CSV with 5 columns:</p>
+  <p><strong>MODEL | SERIAL | ID | CUSTOMER | BUILDING</strong></p>
+
   <input type="file" id="csvFile" accept=".csv">
-  <table id="output"></table>
+
+  <div id="gridContainer"></div>
+  <pre id="asciiOutput"></pre>
+
   <script src="script.js"></script> 
 </body>
 </html>
