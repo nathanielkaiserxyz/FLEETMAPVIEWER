@@ -9,12 +9,14 @@
 
 <body>
   <h2>FLEETMAP VIEWER</h2>
-  <p>Upload a CSV with 5 columns:</p>
-  <p><strong>MODEL | SERIAL | ID | CUSTOMER | BUILDING</strong></p>
+  <p>Upload a CSV with 6 columns:</p>
+  <p><strong>MODEL | SERIAL | ID | CUSTOMER | BUILDING | CUSTOMER NAME</strong></p>
 
   <input type="file" id="csvFile" accept=".csv">
-
-  <div id="gridContainer"></div>
+  <label>
+    <input type="checkbox" id="showImage" checked>
+    Show image column
+  </label>
   <pre id="asciiOutput"></pre>
 
   <script src="script.js"></script> 
