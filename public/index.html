@@ -8,17 +8,23 @@
 </head>
 
 <body>
-  <h2>FLEETMAP VIEWER</h2>
-  <p>Upload a CSV with 6 columns:</p>
-  <p>The first three columns are meant to be understood by warner and the last three by the customer.</p>
-  <p>Customer is the specific name: eg serial. Building is the building customer will know/grouping. Customer name is specific inside the building, office basestation, security handheld.</p>
-  <p><strong>MODEL | SERIAL | ID | CUSTOMER | BUILDING | CUSTOMER NAME</strong></p>
-  <p>This is meant to be used in communication with the customer to show what was worked on/ our radio list.</p>
+<h3>FLEETMAP VIEWER</h3>
+
+<p>Upload a CSV with 6 columns:</p>
+<pre><code>MODEL | SERIAL | ID | CUSTOMER | BUILDING | CUSTOMER NAME</code></pre>
+<p>The first four columns are primarily for internal use, and the last two are for customer understanding.</p>
+
+<p>Explanation of the last three columns:</p>
+<ul>
+  <li>Customer: The specific name, e.g., customer serial. This is not used in the output and is for diagnostics only.</li>
+  <li>Building: The high-level grouping that the customer will recognize, e.g., Admin, Janitor.</li>
+  <li>Customer Name: The specific entity inside the grouping, e.g., Security Basestation, Security Handheld.</li>
+</ul>
 
   <input type="file" id="csvFile" accept=".csv">
   <label>
     <input type="checkbox" id="showImage" checked>
-    Show image column
+    Show TYPE column
   </label>
   <pre id="asciiOutput"></pre>
 
